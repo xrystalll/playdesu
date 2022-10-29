@@ -1,6 +1,8 @@
+import fs from "fs";
 import createError from "http-errors";
 import Vibrant from "node-vibrant";
 import multer from "multer";
+import sharp from "sharp";
 
 import Game from "../models/Game.js";
 import storage from "../utils/storage.js";
@@ -98,6 +100,12 @@ export const createGame = async (req, res, next) => {
         : [];
       const genreArray = genre ? genre.split(" ") : [];
 
+      const resizeBanner = await sharp(req.files.banner[0].path)
+        .resize(512, 308)
+        .toBuffer();
+
+      fs.writeFileSync(req.files.banner[0].path, resizeBanner);
+
       const vibrantData = await Vibrant.from(
         "./public/uploads/" + req.files.banner[0].filename
       ).getPalette();
@@ -133,7 +141,6 @@ export const createGame = async (req, res, next) => {
       res.json(game);
     });
   } catch (err) {
-    console.log(err);
     next(createError.InternalServerError(err));
   }
 };
