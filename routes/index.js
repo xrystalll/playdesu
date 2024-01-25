@@ -8,7 +8,7 @@ router.get("/", (req, res) => {
   res.json({
     type: "success",
     code: 200,
-    message: "Welcome to the xlllBot root path",
+    message: "Welcome to the playです root path",
   });
 });
 

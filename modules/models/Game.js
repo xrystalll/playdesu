@@ -3,7 +3,6 @@ import mongoosePaginate from "mongoose-paginate-v2";
 
 const gameSchema = new Schema({
   createdAt: Date,
-  updatedAt: Date,
   displayName: {
     type: String,
     required: true,
@@ -12,12 +11,7 @@ const gameSchema = new Schema({
     type: String,
     lowercase: true,
   },
-  colors: [String],
-  banner: {
-    type: String,
-    required: true,
-  },
-  cover: {
+  color: {
     type: String,
     required: true,
   },
@@ -25,24 +19,35 @@ const gameSchema = new Schema({
     type: String,
     required: true,
   },
-  screenshots: [String],
-  year: Number,
-  genre: [String],
-  studio: String,
-  price: {
-    type: Number,
-    default: 0,
-  },
-  system: {
+  backdrop: {
     type: String,
     required: true,
   },
-  size: Number,
+  poster: {
+    type: String,
+    required: true,
+  },
   file: {
     type: String,
     required: true,
   },
-  rating: {
+  studio: {
+    type: String,
+    required: true,
+  },
+  gameSystem: {
+    type: String,
+    required: true,
+  },
+  releaseYear: {
+    type: String,
+    required: true,
+  },
+  genre: {
+    type: String,
+    required: true,
+  },
+  price: {
     type: Number,
     default: 0,
   },
@@ -50,6 +55,12 @@ const gameSchema = new Schema({
     type: Number,
     default: 0,
   },
+  rating: {
+    type: Number,
+    default: 0,
+  },
+  size: String,
+  screenshots: [String],
 });
 
 gameSchema.plugin(mongoosePaginate);

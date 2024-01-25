@@ -13,8 +13,8 @@ const upload = multer({
   fileFilter: (req, file, callback) => checkFileExec(file, callback),
 }).fields([
   { name: "rom", maxCount: 1 },
-  { name: "banner", maxCount: 1 },
-  { name: "cover", maxCount: 1 },
+  { name: "poster", maxCount: 1 },
+  { name: "backdrop", maxCount: 1 },
   { name: "screenshots", maxCount: 10 },
 ]);
 
@@ -81,59 +81,65 @@ export const createGame = async (req, res, next) => {
     upload(req, res, async (err) => {
       if (err) return next(createError.BadRequest(err.message));
 
-      const { displayName, description, year, genre, studio, price, system } =
+      const { displayName, description, releaseYear, genre, studio, price, gameSystem } =
         req.body;
 
       if (!displayName)
         return next(createError.BadRequest("displayName must not be empty"));
       if (!description)
-        return next(createError.BadRequest("Description must not be empty"));
-      if (!system)
-        return next(createError.BadRequest("System must not be empty"));
+        return next(createError.BadRequest("description must not be empty"));
+      if (!studio)
+        return next(createError.BadRequest("studio must not be empty"));
+      if (!gameSystem)
+        return next(createError.BadRequest("gameSystem must not be empty"));
+      if (!releaseYear)
+        return next(createError.BadRequest("releaseYear must not be empty"));
+      if (!genre)
+        return next(createError.BadRequest("genre must not be empty"));
 
       const now = new Date().toISOString();
-      const lowerName = displayName.toLowerCase().replace(/\s+/g, "");
+      const lowerName = displayName
+        .replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, "")
+        .replace(/\s+/g, "")
+        .toLowerCase();
       const screenshots = req.files?.screenshots
         ? req.files.screenshots
             .map((i) => i.filename)
             .map((i) => "/uploads/" + i)
         : [];
-      const genreArray = genre ? genre.split(" ") : [];
 
-      const resizeBanner = await sharp(req.files.banner[0].path)
-        .resize(512, 308)
+      const resizeBackdrop = await sharp(req.files.backdrop[0].path)
+        .resize(960, 540)
         .toBuffer();
 
-      fs.writeFileSync(req.files.banner[0].path, resizeBanner);
+      fs.writeFileSync(req.files.backdrop[0].path, resizeBackdrop);
+
+      const resizePoster = await sharp(req.files.poster[0].path)
+        .resize(392, 220)
+        .toBuffer();
+
+      fs.writeFileSync(req.files.poster[0].path, resizePoster);
 
       const vibrantData = await Vibrant.from(
-        "./public/uploads/" + req.files.banner[0].filename
+        "./public/uploads/" + req.files.poster[0].filename
       ).getPalette();
 
       const newGame = new Game({
         createdAt: now,
-        updatedAt: now,
         displayName, // required
         name: lowerName,
-        colors: [
-          vibrantData.Vibrant.hex,
-          vibrantData.DarkVibrant.hex,
-          vibrantData.LightVibrant.hex,
-          vibrantData.Muted.hex,
-          vibrantData.DarkMuted.hex,
-          vibrantData.LightMuted.hex,
-        ],
-        banner: "/uploads/" + req.files.banner[0].filename, // required
-        cover: "/uploads/" + req.files.cover[0].filename, // required
+        color: vibrantData.Vibrant.hex,
         description, // required
-        screenshots,
-        year,
-        genre: genreArray,
-        studio,
-        price,
-        system, // required
-        size: req.files.rom[0].size,
+        backdrop: "/uploads/" + req.files.backdrop[0].filename, // required
+        poster: "/uploads/" + req.files.poster[0].filename, // required
         file: "/uploads/" + req.files.rom[0].filename, // required
+        studio, // required
+        gameSystem, // required
+        releaseYear, // required
+        genre, // required
+        price,
+        size: req.files.rom[0].size,
+        screenshots,
       });
 
       const game = await newGame.save();

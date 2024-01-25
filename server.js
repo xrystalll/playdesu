@@ -43,4 +43,4 @@ DB()
       console.log(`Server run on ${PORT}`);
     });
   })
-  .catch((e) => console.error(`Launch error: ${err}`));
+  .catch((e) => console.error(`Launch error: ${e}`));
