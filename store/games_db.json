@@ -33,6 +33,27 @@
       "__v": 0
     },
     {
+      "_id": "2sc39dgcv312y1224332p963",
+      "createdAt": "2024-01-25T16:13:51.125Z",
+      "displayName": "Command & Conquer: Red Alert: Retaliation",
+      "name": "command&conquer:redalert:retaliation",
+      "color": "#360004",
+      "description": "Command & Conquer: Red Alert is a real-time strategy video game in the Command & Conquer franchise, developed and published by Westwood Studios in 1996.",
+      "backdrop": "https://raw.githubusercontent.com/xrystalll/playdesu/master/store/psx/Command_and_Conquer_Red_Alert_Retaliation/backdrop.jpg",
+      "poster": "https://raw.githubusercontent.com/xrystalll/playdesu/master/store/psx/Command_and_Conquer_Red_Alert_Retaliation/poster.jpg",
+      "file": "https://raw.githubusercontent.com/xrystalll/playdesu/master/store/psx/Command_and_Conquer_Red_Alert_Retaliation/rom.bin",
+      "studio": "Westwood Studios",
+      "gameSystem": "PSX",
+      "releaseYear": "1997",
+      "genre": "Real-time strategy",
+      "price": 0,
+      "downloads": 0,
+      "rating": 0,
+      "size": "624951296",
+      "screenshots": [],
+      "__v": 0
+    },
+    {
       "_id": "65b28a0b40646594514dff80",
       "createdAt": "2024-01-25T16:19:23.019Z",
       "displayName": "Rock n' Roll Racing",
