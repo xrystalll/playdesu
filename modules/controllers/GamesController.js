@@ -1,12 +1,13 @@
 import fs from "fs";
 import createError from "http-errors";
-import Vibrant from "node-vibrant";
+import ColorThief from "colorthief";
 import multer from "multer";
 import sharp from "sharp";
 
 import Game from "../models/Game.js";
 import storage from "../utils/storage.js";
 import checkFileExec from "../utils/checkFileExec.js";
+import rgbToHex from "../utils/rgbToHex.js";
 
 const upload = multer({
   storage: storage("uploads", "file"),
@@ -120,15 +121,15 @@ export const createGame = async (req, res, next) => {
 
       fs.writeFileSync(req.files.poster[0].path, resizePoster);
 
-      const vibrantData = await Vibrant.from(
+      const color = await ColorThief.getColor(
         "./public/uploads/" + req.files.poster[0].filename
-      ).getPalette();
+      );
 
       const newGame = new Game({
         createdAt: now,
         displayName, // required
         name: lowerName,
-        color: vibrantData.Vibrant.hex,
+        color: rgbToHex(color[0], color[1], color[2]),
         description, // required
         backdrop: "/uploads/" + req.files.backdrop[0].filename, // required
         poster: "/uploads/" + req.files.poster[0].filename, // required
